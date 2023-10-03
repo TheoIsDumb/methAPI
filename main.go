@@ -10,7 +10,8 @@ func root(c *gin.Context) {
 }
 
 func hello(c *gin.Context) {
-  c.String(http.StatusOK, "hello\n")
+  name := c.DefaultQuery("name", "friend")
+  c.String(http.StatusOK, "hello %s!\n", name)
 }
 
 func main() {
