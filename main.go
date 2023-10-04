@@ -29,7 +29,7 @@ func datecalc(c *gin.Context) {
     c.String(http.StatusBadRequest, "%s\n", "Date(s) not provided.")
   } else {
     first := c.Query("f")
-    last := c.DefaultQuery("l", time.Now().Format("2006-01-02"))
+    last := c.DefaultQuery("l", time.Now().Format(dateLayout))
     firstDate, _ := time.Parse(dateLayout, first)
     secondDate, _ := time.Parse(dateLayout, last)
     difference := firstDate.Sub(secondDate)
