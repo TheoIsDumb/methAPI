@@ -16,20 +16,20 @@ func hello(c *gin.Context) {
   c.String(http.StatusOK, "hello %s!\n", name)
 }
 
+func goodbye(c *gin.Context) {
+  name := c.Param("name")
+  c.String(http.StatusOK, "goodbye %s!\n", name)
+}
+
 func datecalc(c *gin.Context) {
   dateLayout := "2006-01-02"
   first := c.Query("f")
-  last := c.Query("l")
+  last := c.DefaultQuery("l", time.Now().Format("2006-01-02"))
   firstDate, _ := time.Parse(dateLayout, first)
   secondDate, _ := time.Parse(dateLayout, last)
   difference := firstDate.Sub(secondDate)
 
   c.String(http.StatusOK, "%v\n", difference.Abs().Hours()/24)
-}
-
-func goodbye(c *gin.Context) {
-  name := c.Param("name")
-  c.String(http.StatusOK, "goodbye %s!\n", name)
 }
 
 func main() {
