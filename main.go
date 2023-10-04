@@ -1,8 +1,10 @@
 package main
 
 import (
-  "net/http"
-  "github.com/gin-gonic/gin"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func root(c *gin.Context) {
@@ -14,11 +16,19 @@ func hello(c *gin.Context) {
   c.String(http.StatusOK, "hello %s!\n", name)
 }
 
+func datecalc(c *gin.Context) {
+  dateLayout := "2006-01-02"
+  first := c.Query("f")
+  last := c.Query("l")
+  firstDate, _ := time.Parse(dateLayout, first)
+  secondDate, _ := time.Parse(dateLayout, last)
+  difference := firstDate.Sub(secondDate)
+
+  c.String(http.StatusOK, "%v\n", difference.Abs().Hours()/24)
+}
+
 func goodbye(c *gin.Context) {
-  name, err := c.Param("name")
-  if err != nil {
-    name = "friend"
-  }
+  name := c.Param("name")
   c.String(http.StatusOK, "goodbye %s!\n", name)
 }
 
@@ -27,6 +37,7 @@ func main() {
   router.GET("/", root)
   router.GET("/hello", hello)
   router.GET("/goodbye/:name", goodbye)
+  router.GET("/datecalc", datecalc)
   
   router.Run("localhost:3000")
 }
