@@ -24,13 +24,18 @@ func goodbye(c *gin.Context) {
 
 func datecalc(c *gin.Context) {
   dateLayout := "2006-01-02"
-  first := c.Query("f")
-  last := c.DefaultQuery("l", time.Now().Format("2006-01-02"))
-  firstDate, _ := time.Parse(dateLayout, first)
-  secondDate, _ := time.Parse(dateLayout, last)
-  difference := firstDate.Sub(secondDate)
 
-  c.String(http.StatusOK, "%v\n", difference.Abs().Hours()/24)
+  if c.Query("f") == "" {
+    c.String(http.StatusBadRequest, "%s\n", "Date(s) not provided.")
+  } else {
+    first := c.Query("f")
+    last := c.DefaultQuery("l", time.Now().Format("2006-01-02"))
+    firstDate, _ := time.Parse(dateLayout, first)
+    secondDate, _ := time.Parse(dateLayout, last)
+    difference := firstDate.Sub(secondDate)
+
+    c.String(http.StatusOK, "%v\n", difference.Abs().Hours()/24)
+  }
 }
 
 func brrrcalc(c *gin.Context) {
