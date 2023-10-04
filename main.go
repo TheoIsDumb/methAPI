@@ -34,10 +34,14 @@ func datecalc(c *gin.Context) {
 }
 
 func brrrcalc(c *gin.Context) {
-  duration, _ := strconv.ParseFloat(c.Query("d"), 32)
-  speed, _ := strconv.ParseFloat(c.Query("s"), 32)
+  if c.Query("d") == "" || c.Query("s") == "" {
+    c.String(http.StatusBadRequest, "%s\n", "Duration/Speed not given.")
+  } else {
+    duration, _ := strconv.ParseFloat(c.Query("d"), 32)
+    speed, _ := strconv.ParseFloat(c.Query("s"), 32)
 
-  c.String(http.StatusOK, "%v\n", duration/speed)
+    c.String(http.StatusOK, "%v\n", duration/speed)
+  }
 }
 
 func main() {
