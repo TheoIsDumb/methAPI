@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -32,12 +33,20 @@ func datecalc(c *gin.Context) {
   c.String(http.StatusOK, "%v\n", difference.Abs().Hours()/24)
 }
 
+func brrrcalc(c *gin.Context) {
+  duration, _ := strconv.ParseFloat(c.Query("d"), 32)
+  speed, _ := strconv.ParseFloat(c.Query("s"), 32)
+
+  c.String(http.StatusOK, "%v\n", duration/speed)
+}
+
 func main() {
   router := gin.Default()
   router.GET("/", root)
   router.GET("/hello", hello)
   router.GET("/goodbye/:name", goodbye)
   router.GET("/datecalc", datecalc)
+  router.GET("/brrrcalc", brrrcalc)
   
   router.Run("localhost:3000")
 }
