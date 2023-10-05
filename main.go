@@ -16,13 +16,17 @@ func root(w http.ResponseWriter, r *http.Request) {
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "Hello, HTTP!\n")
-}
+  var name string
 
-// func hello(c *gin.Context) {
-//   name := c.DefaultQuery("name", "friend")
-//   c.String(http.StatusOK, "hello %s!\n", name)
-// }
+  if r.URL.Query().Has("name") {
+    name = r.URL.Query().Get("name")
+  } else {
+    name = "friend"
+  }
+
+  response := fmt.Sprintf("hello %s!\n", name)
+	io.WriteString(w, response)
+}
 
 // func goodbye(c *gin.Context) {
 //   name := c.Param("name")
