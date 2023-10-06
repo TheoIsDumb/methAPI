@@ -59,26 +59,31 @@ func datecalc(w http.ResponseWriter, r *http.Request) {
 
     io.WriteString(w, strconv.FormatFloat(difference.Abs().Hours()/24, 'f', 6, 64) + "\n")
   } else {
-    io.WriteString(w, "exit")
+    w.WriteHeader(http.StatusBadRequest)
+    io.WriteString(w, "exit\n")
   }
 }
 
-// func brrrcalc(c *gin.Context) {
-//   if c.Query("d") == "" || c.Query("s") == "" {
-//     c.String(http.StatusBadRequest, "%s\n", "Duration/Speed not given.")
-//   } else {
-//     duration, _ := strconv.ParseFloat(c.Query("d"), 32)
-//     speed, _ := strconv.ParseFloat(c.Query("s"), 32)
+func brrrcalc(w http.ResponseWriter, r *http.Request) {
+  if !r.URL.Query().Has("d") || !r.URL.Query().Has("s") {
+    w.WriteHeader(http.StatusBadRequest)
+    io.WriteString(w, "Duration/Speed not given.\n")
+  } else {
+    duration, _ := strconv.ParseFloat(r.URL.Query().Get("d"), 32)
+    speed, _ := strconv.ParseFloat(r.URL.Query().Get("s"), 32)
 
-//     c.String(http.StatusOK, "%v\n", duration/speed)
-//   }
-// }
+    result := strconv.FormatFloat(duration/speed, 'f', 1, 32)
+
+    io.WriteString(w, result + "\n")
+  }
+}
 
 func main() {
   http.HandleFunc("/", root)
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/goodbye", goodbye)
 	http.HandleFunc("/datecalc", datecalc)
+	http.HandleFunc("/brrrcalc", brrrcalc)
 
   fmt.Println("server started on :3000!")
 
