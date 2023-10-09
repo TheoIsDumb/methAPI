@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"strconv"
@@ -11,7 +10,7 @@ import (
 )
 
 func root(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "welcome!\n")
+	fmt.Fprintf(w, "welcome!\n")
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
@@ -23,8 +22,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
     name = "friend"
   }
 
-  response := fmt.Sprintf("hello %s!\n", name)
-	io.WriteString(w, response)
+	fmt.Fprintf(w, "hello %v!\n", name)
 }
 
 func goodbye(w http.ResponseWriter, r *http.Request) {
@@ -36,8 +34,7 @@ func goodbye(w http.ResponseWriter, r *http.Request) {
     name = "friend"
   }
 
-  response := fmt.Sprintf("goodbye %s!\n", name)
-	io.WriteString(w, response)
+	fmt.Fprintf(w, "goodbye %v!\n", name)
 }
 
 func datecalc(w http.ResponseWriter, r *http.Request) {
@@ -57,24 +54,24 @@ func datecalc(w http.ResponseWriter, r *http.Request) {
     secondDate, _ := time.Parse(dateLayout, second)
     difference := firstDate.Sub(secondDate)
 
-    io.WriteString(w, strconv.FormatFloat(difference.Abs().Hours()/24, 'f', 6, 64) + "\n")
+    fmt.Fprintf(w, strconv.FormatFloat(difference.Abs().Hours()/24, 'f', 6, 64) + "\n")
   } else {
     w.WriteHeader(http.StatusBadRequest)
-    io.WriteString(w, "exit\n")
+    fmt.Fprintf(w, "exit\n")
   }
 }
 
 func brrrcalc(w http.ResponseWriter, r *http.Request) {
   if !r.URL.Query().Has("d") || !r.URL.Query().Has("s") {
     w.WriteHeader(http.StatusBadRequest)
-    io.WriteString(w, "Duration/Speed not given.\n")
+    fmt.Fprintf(w, "Duration/Speed not given.\n")
   } else {
     duration, _ := strconv.ParseFloat(r.URL.Query().Get("d"), 32)
     speed, _ := strconv.ParseFloat(r.URL.Query().Get("s"), 32)
 
     result := strconv.FormatFloat(duration/speed, 'f', 1, 32)
 
-    io.WriteString(w, result + "\n")
+    fmt.Fprintf(w, result + "\n")
   }
 }
 
